@@ -2,11 +2,13 @@
 A repo for building a CNN from scratch to classify Cats and Dogs in a picture with varying qualities
 
 # Dataset
-`https://www.kaggle.com/datasets/princelv84/dogsvscats/data`
+Dogs vs. Cats Image Classification Dataset<br>
+<a href='https://www.kaggle.com/datasets/princelv84/dogsvscats/data'>Link</a>
 
 # Project Proposal
-`https://docs.google.com/document/d/1NS67avLl44VclIQg-QJNikpXlAA0dSK8Lv49odQ7LwU/edit?usp=sharing`
+Project ideas and methodology <br>
+<a href='https://docs.google.com/document/d/1NS67avLl44VclIQg-QJNikpXlAA0dSK8Lv49odQ7LwU/edit?usp=sharing'>Link</a>
 
 # Project Backlog
-`https://docs.google.com/spreadsheets/d/1H8CPgRGdHlObjSIvUn7mRfApElcvLQKXKnGzgNe0Kps/edit?usp=sharing`
-
+Tasks monitoring and milestones <br>
+<a href='https://docs.google.com/spreadsheets/d/1H8CPgRGdHlObjSIvUn7mRfApElcvLQKXKnGzgNe0Kps/edit?usp=sharing'>Link</a>
