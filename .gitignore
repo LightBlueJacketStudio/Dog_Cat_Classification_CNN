@@ -10,7 +10,7 @@
 .env
 
 #trained model
-model.pth
+#model.pth // size is not big so we can upload to github
 
 # dataset
 original_data/
