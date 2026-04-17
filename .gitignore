@@ -6,6 +6,15 @@
 # venv
 .venv/
 
+# env file
+.env
+
+#trained model
+model.pth
+
+# dataset
+original_data/
+
 # User-specific files
 *.rsuser
 *.suo
