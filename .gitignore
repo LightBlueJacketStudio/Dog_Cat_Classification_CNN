@@ -6,6 +6,15 @@
 # venv
 .venv/
 
+# env file
+.env
+
+#trained model
+#model.pth // size is not big so we can upload to github
+
+# dataset
+original_data/
+
 # User-specific files
 *.rsuser
 *.suo
