@@ -18,15 +18,21 @@ Tasks monitoring and milestones <br>
 
 Start a virtual environment (this requires you to have a python 3.11 installed):
 
-`py -3.11 -m venv .venv`
+```
+py -3.11 -m venv .venv
+```
 
 Activate the virtual environment (from project root):
 
-`.\.venv\Scripts\Activate.ps1`
+```
+.\.venv\Scripts\Activate.ps1
+```
 
 Install the required libraries:
 
-`pip install requirements.txt`
+```
+pip install -r requirements.txt
+```
 
 Set up your environment variable
 
@@ -51,12 +57,25 @@ in the structure of
 
 your `.env` should look like
 ```
-train_data_location="<path to train>"
-test_data_location="<path to test>"
+input_train_data_location="<path to the whole train dataset>"
+input_test_data_location="<path to the whole test dataset>"
+
+output_train_data_location="<path to the filtered train dataset>"
+output_test_data_location="<path to the filtered test dataset>"
 ```
 
+# Filter the original dataset to a smaller subset
 
-# Run Pre-Trained model
+We used file size as the filter (keeping size > 16 kB)
+
+run 
+```
+python .\preprocessing.py
+```
+you should see a filtered dataset folder being created, this would be the data for the model to train
+
+
+# Train the Pre-Trained model
 
 Train the model using the training dataset, 
 
@@ -68,15 +87,19 @@ Running the training script might take longer time if running on GPU,
 
 I waited about 1 hour for my laptop to train on the dataset
 
-`python .\use_EfficientNet.py`
-
+```
+python .\infr_EfficientNet.py
+```
 Once done, you should see a `model.pth` in the project root, 
 
 that is the trained weight
 
-<hr>
+
+# Use the Trained model
 
 Test your trained efficientnet instance by running
-`python .\use_trained_eff_net.py`
+```
+python .\use_trained_eff_net.py
+```
 
-the end result should be `Cat( <Probability> )`
+the end result should be `Dog (1.0000)`, where 1.0000 represents the probabilty
