@@ -13,8 +13,9 @@
 #model.pth // size is not big so we can upload to github
 
 # dataset
- ./dataset/
-./dataset_filtered/
+dataset/
+dataset_filtered/
+
 # User-specific files
 *.rsuser
 *.suo

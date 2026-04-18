@@ -59,7 +59,7 @@ def main():
     load_dotenv()
 
     train_path = os.getenv("output_train_data_location")
-    test_path = os.getenv("test_data_location")
+    test_path = os.getenv("input_test_data_location")
 
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     print("Using device:", device)
