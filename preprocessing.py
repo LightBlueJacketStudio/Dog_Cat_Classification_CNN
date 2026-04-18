@@ -1,17 +1,25 @@
 import os
+from dotenv import load_dotenv
 import shutil
 
 #Filter out images smaller than 16KB to ensure quality of the dataset
 #Filtered data will be saved in "dataset_filtered"
 
-input_dir = "dataset/test"
-output_dir = "dataset_filtered/test"
+load_dotenv()
+
+#input data
+input_train_dir = os.getenv("input_train_data_location")
+input_test_dir = os.getenv("input_test_data_location")
+
+#output data
+output_train_dir = os.getenv("output_train_data_location")
+output_test_dir = os.getenv("output_test_data_location")
 
 MIN_SIZE = 16 * 1024  # size in byte 16KB
 
 for label in ["cats", "dogs"]:
-    input_path = os.path.join(input_dir, label)
-    output_path = os.path.join(output_dir, label)
+    input_path = os.path.join(input_train_dir, label)
+    output_path = os.path.join(output_train_dir, label)
 
     os.makedirs(output_path, exist_ok=True)
 
@@ -23,3 +31,4 @@ for label in ["cats", "dogs"]:
 
             if size > MIN_SIZE:
                 shutil.copy(file_path, os.path.join(output_path, file))
+    print('successfully filtered')
