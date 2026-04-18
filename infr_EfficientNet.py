@@ -58,7 +58,7 @@ def evaluate(model, loader, criterion, device):
 def main():
     load_dotenv()
 
-    train_path = os.getenv("train_data_location")
+    train_path = os.getenv("output_train_data_location")
     test_path = os.getenv("test_data_location")
 
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")

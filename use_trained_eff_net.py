@@ -32,11 +32,14 @@ dog_image_path = "test_input/dog.67.jpg"
 cat_image = Image.open(cat_image_path).convert("RGB")
 cat_image = transform(cat_image).unsqueeze(0).to(device)
 
+dog_image = Image.open(dog_image_path).convert("RGB")
+dog_image = transform(dog_image).unsqueeze(0).to(device)
+
 print("Image loaded")
 print("Running inference")
 
 with torch.no_grad():
-    output = model(cat_image)
+    output = model(dog_image)
     prob = torch.sigmoid(output).item()
 
 if prob > 0.5:
