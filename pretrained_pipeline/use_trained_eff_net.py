@@ -1,12 +1,15 @@
 import timm
 import torch
 import torch.nn as nn
+import os
+from dotenv import load_dotenv
 from torchvision import transforms
 from PIL import Image
 
 print("Script started")
 
-
+load_dotenv()
+print(os.getenv("test_input_cat"))
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 print("Using device:", device)
 
@@ -26,8 +29,14 @@ transform = transforms.Compose([
     )
 ])
 
-cat_image_path = "test_input/cat.554.jpg"
-dog_image_path = "test_input/dog.67.jpg"
+cat_image_path = os.getenv("test_input_cat")
+dog_image_path = os.getenv("test_input_dog")
+
+# if not cat_image_path or not dog_image_path:
+#     print("cat path: " + cat_image_path)
+#     print("dog path: " + dog_image_path)
+#     print("error, none path is returned from os.getenv")
+#     exit()
 
 cat_image = Image.open(cat_image_path).convert("RGB")
 cat_image = transform(cat_image).unsqueeze(0).to(device)

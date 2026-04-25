@@ -12,8 +12,8 @@ input_train_dir = os.getenv("input_train_data_location")
 input_test_dir = os.getenv("input_test_data_location")
 
 #output data
-output_train_dir = os.getenv("output_train_data_location")
-output_test_dir = os.getenv("output_test_data_location")
+output_train_dir = os.getenv("filtered_train_data_location")
+# output_test_dir = os.getenv("filtered_test_data_location")
 
 MIN_SIZE = 16 * 1024  # size in byte 16KB
 
