@@ -101,4 +101,5 @@ if __name__ == "__main__":
     tensor = load_and_augment_image()
     print(f"Tensor shape: {tensor.shape}")
     print(f"Tensor dtype: {tensor.dtype}")
-    save_tensor_image(tensor, "augmented_image.jpg")
+    output_dir = os.getenv("test_output")
+    save_tensor_image(tensor, output_dir + "augmented_image.jpg")
