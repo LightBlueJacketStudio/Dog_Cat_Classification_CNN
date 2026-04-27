@@ -107,7 +107,7 @@ def validate(model, loader, criterion, device):
 def main():
     load_dotenv()
 
-    train_path = os.getenv("output_train_data_location")
+    train_path = os.getenv("filtered_train_data_location")
     test_path = os.getenv("input_test_data_location")
 
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
@@ -148,7 +148,7 @@ def main():
     optimizer = optim.Adam(model.parameters(), lr=1e-3)
     scheduler = optim.lr_scheduler.StepLR(optimizer, step_size=5, gamma=0.5)
 
-    num_epochs = 10
+    num_epochs = 3
     best_val_acc = 0.0
 
     for epoch in range(num_epochs):
