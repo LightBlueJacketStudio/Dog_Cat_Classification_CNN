@@ -1,55 +1,18 @@
-# Defines functions for image preprocessing
-
 import os
-from dotenv import load_dotenv
 from typing import Tuple
 
 from PIL import Image
 import torch
 from torchvision import transforms
-
 from torchvision.transforms import ToPILImage
 
 
-def load_and_augment_image(
+def get_transforms(
     image_size: Tuple[int, int] = (224, 224),
     train: bool = True,
-) -> torch.Tensor:
-    """
-    Load an image from the path stored in the `output_train_data_location`
-    environment variable, preprocess it for CNN input, and return a torch.Tensor.
-
-    Args:
-        image_size: Target image size as (height, width).
-        train: If True, apply data augmentation. If False, only resize/normalize.
-
-    Returns:
-        A torch.Tensor of shape [C, H, W].
-
-    Raises:
-        EnvironmentError: If the env var is not set.
-        FileNotFoundError: If the image path does not exist.
-        ValueError: If the file cannot be opened as an image.
-    """
-    image_path = os.getenv("test_input")
-
-    if not image_path:
-        raise EnvironmentError(
-            "Environment variable 'output_train_data_location' is not set."
-        )
-
-    if not os.path.isfile(image_path):
-        raise FileNotFoundError(
-            f"Image file not found at path: {image_path}"
-        )
-
-    try:
-        image = Image.open(image_path).convert("RGB")
-    except Exception as exc:
-        raise ValueError(f"Failed to open image at {image_path}: {exc}") from exc
-
+):
     if train:
-        transform = transforms.Compose([
+        return transforms.Compose([
             transforms.Resize(image_size),
             transforms.RandomHorizontalFlip(p=0.5),
             transforms.RandomRotation(degrees=20),
@@ -66,7 +29,7 @@ def load_and_augment_image(
             ),
         ])
     else:
-        transform = transforms.Compose([
+        return transforms.Compose([
             transforms.Resize(image_size),
             transforms.ToTensor(),
             transforms.Normalize(
@@ -75,31 +38,57 @@ def load_and_augment_image(
             ),
         ])
 
-    image_tensor = transform(image)
-    return image_tensor
+
+def load_and_preprocess_image(
+    image_path: str,
+    image_size: Tuple[int, int] = (224, 224),
+    train: bool = False,
+) -> torch.Tensor:
+    """
+    Load one image from disk and return a preprocessed tensor [C, H, W].
+    """
+    if not image_path:
+        raise ValueError("image_path is empty")
+
+    if not os.path.isfile(image_path):
+        raise FileNotFoundError(f"Image file not found: {image_path}")
+
+    try:
+        image = Image.open(image_path).convert("RGB")
+    except Exception as exc:
+        raise ValueError(f"Failed to open image at {image_path}: {exc}") from exc
+
+    transform = get_transforms(image_size=image_size, train=train)
+    return transform(image)
+
+
+def load_from_env(
+    env_key: str = "test_input",
+    image_size: Tuple[int, int] = (224, 224),
+    train: bool = False,
+) -> torch.Tensor:
+    """
+    Load an image from the path stored in the `test_input`
+    environment variable, preprocess it for CNN input,
+    and return a torch.Tensor.
+    """
+    image_path = os.getenv(env_key)
+    if not image_path:
+        raise EnvironmentError(f"Environment variable '{env_key}' is not set.")
+    return load_and_preprocess_image(image_path, image_size=image_size, train=train)
 
 
 def save_tensor_image(tensor: torch.Tensor, save_path: str):
     """
     Save a tensor image (C, H, W) to disk.
-    Automatically unnormalizes if needed.
+    Automatically unnormalizes ImageNet-normalized tensors.
     """
-    # Unnormalize (if you used ImageNet normalization)
     mean = torch.tensor([0.485, 0.456, 0.406]).view(3, 1, 1)
     std = torch.tensor([0.229, 0.224, 0.225]).view(3, 1, 1)
 
-    tensor = tensor.clone().detach()
-    tensor = tensor * std + mean  # unnormalize
+    tensor = tensor.clone().detach().cpu()
+    tensor = tensor * std + mean
     tensor = torch.clamp(tensor, 0, 1)
 
-    to_pil = ToPILImage()
-    image = to_pil(tensor)
+    image = ToPILImage()(tensor)
     image.save(save_path)
-
-if __name__ == "__main__":
-    load_dotenv()
-    tensor = load_and_augment_image()
-    print(f"Tensor shape: {tensor.shape}")
-    print(f"Tensor dtype: {tensor.dtype}")
-    output_dir = os.getenv("test_output")
-    save_tensor_image(tensor, output_dir + "augmented_image.jpg")
