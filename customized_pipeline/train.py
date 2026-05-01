@@ -61,7 +61,7 @@ def main():
     optimizer = torch.optim.Adam(model.parameters(), lr=1e-3)
     scheduler = torch.optim.lr_scheduler.StepLR(optimizer, step_size=5, gamma=0.5)
 
-    num_epochs = 3
+    num_epochs = 6
     best_val_acc = 0.0
 
     for epoch in range(num_epochs):
