@@ -8,7 +8,12 @@ from torch.utils.data import DataLoader, random_split, Subset
 from .preprocess_util import get_transforms
 from .training_util import train_one_epoch, validate
 from .model import DogCatCNN
-
+from .evaluation import (
+    evaluate_model,
+    print_epoch_report,
+    print_final_test_report,
+    print_classification_report,
+)
 
 def main():
     load_dotenv()
@@ -46,11 +51,30 @@ def main():
         transform=get_transforms(train=False),
     )
 
-    train_loader = DataLoader(train_dataset, batch_size=32, shuffle=True, num_workers=2)
-    val_loader = DataLoader(val_dataset, batch_size=32, shuffle=False, num_workers=2)
-    test_loader = DataLoader(test_dataset, batch_size=32, shuffle=False, num_workers=2)
+    train_loader = DataLoader(
+        train_dataset,
+        batch_size=32,
+        shuffle=True,
+        num_workers=2,
+    )
 
-    print("Classes:", full_train_dataset.classes)
+    val_loader = DataLoader(
+        val_dataset,
+        batch_size=32,
+        shuffle=False,
+        num_workers=2,
+    )
+
+    test_loader = DataLoader(
+        test_dataset,
+        batch_size=32,
+        shuffle=False,
+        num_workers=2,
+    )
+
+    class_names = full_train_dataset.classes
+
+    print("Classes:", class_names)
 
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     print("Using device:", device)
@@ -59,30 +83,79 @@ def main():
 
     criterion = nn.BCEWithLogitsLoss()
     optimizer = torch.optim.Adam(model.parameters(), lr=1e-3)
-    scheduler = torch.optim.lr_scheduler.StepLR(optimizer, step_size=5, gamma=0.5)
+    scheduler = torch.optim.lr_scheduler.StepLR(
+        optimizer,
+        step_size=5,
+        gamma=0.5,
+    )
 
-    num_epochs = 3
+    num_epochs = 10
     best_val_acc = 0.0
+    best_model_path = "best_custom_cnn.pth"
 
     for epoch in range(num_epochs):
-        train_loss, train_acc = train_one_epoch(model, train_loader, criterion, optimizer, device)
-        val_loss, val_acc = validate(model, val_loader, criterion, device)
+        train_loss, train_acc = train_one_epoch(
+            model,
+            train_loader,
+            criterion,
+            optimizer,
+            device,
+        )
+
+        train_metrics, _, _, _ = evaluate_model(
+            model=model,
+            dataloader=train_loader,
+            criterion=criterion,
+            device=device,
+        )
+
+        val_metrics, val_labels, val_preds, _ = evaluate_model(
+            model=model,
+            dataloader=val_loader,
+            criterion=criterion,
+            device=device,
+        )
+
         scheduler.step()
 
-        print(f"Epoch {epoch + 1}/{num_epochs}:")
-        print(f"  Train - Loss: {train_loss:.4f}, Acc: {train_acc:.4f}")
-        print(f"  Val   - Loss: {val_loss:.4f}, Acc: {val_acc:.4f}")
+        print_epoch_report(
+            epoch=epoch,
+            num_epochs=num_epochs,
+            train_metrics=train_metrics,
+            val_metrics=val_metrics,
+            class_names=class_names,
+        )
 
-        if val_acc > best_val_acc:
-            best_val_acc = val_acc
-            torch.save(model.state_dict(), "best_custom_cnn.pth")
-            print("  Saved new best model.")
+        if val_metrics["accuracy"] > best_val_acc:
+            best_val_acc = val_metrics["accuracy"]
+            torch.save(model.state_dict(), best_model_path)
+            print("\nSaved new best model.")
+
         print()
 
     print("\nFinal evaluation on test set...\n")
-    model.load_state_dict(torch.load("best_custom_cnn.pth", map_location=device))
-    test_loss, test_acc = validate(model, test_loader, criterion, device)
-    print(f"Test Loss: {test_loss:.4f}, Test Acc: {test_acc:.4f}")
+
+    model.load_state_dict(
+        torch.load(best_model_path, map_location=device)
+    )
+
+    test_metrics, test_labels, test_preds, _ = evaluate_model(
+        model=model,
+        dataloader=test_loader,
+        criterion=criterion,
+        device=device,
+    )
+
+    print_final_test_report(
+        test_metrics=test_metrics,
+        class_names=class_names,
+    )
+
+    print_classification_report(
+        labels=test_labels,
+        preds=test_preds,
+        class_names=class_names,
+    )
 
 
 if __name__ == "__main__":
