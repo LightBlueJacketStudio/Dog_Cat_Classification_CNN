@@ -837,4 +837,5 @@ Detailed Classification Report
    macro avg       0.83      0.83      0.83      5000
 weighted avg       0.83      0.83      0.83      5000
 
+without augmentation
 ```
