@@ -26,7 +26,6 @@ Final evaluation on test set...
 Test Loss: 0.5815, Test Acc: 0.6830
 ```
 
-<<<<<<< HEAD
 6 epoch training on 10,000 data points:
 
 ```
@@ -58,7 +57,6 @@ Epoch 6/6:
   Train - Loss: 0.5307, Acc: 0.7357
   Val   - Loss: 0.5093, Acc: 0.7426
   Saved new best model.
-=======
 
 
 ```
@@ -869,7 +867,6 @@ Detailed Classification Report
     accuracy                           0.83      5000
    macro avg       0.83      0.83      0.83      5000
 weighted avg       0.83      0.83      0.83      5000
->>>>>>> 40dd2ea706612c91ffe77398b3c2df251177797e
 
 without augmentation
 ```
