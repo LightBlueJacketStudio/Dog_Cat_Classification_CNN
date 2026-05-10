@@ -89,7 +89,7 @@ def main():
         gamma=0.5,
     )
 
-    num_epochs = 10
+    num_epochs = 3
     best_val_acc = 0.0
     best_model_path = "best_custom_cnn.pth"
 
