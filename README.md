@@ -13,6 +13,9 @@ Project ideas and methodology <br>
 Tasks monitoring and milestones <br>
 <a href='https://docs.google.com/spreadsheets/d/1H8CPgRGdHlObjSIvUn7mRfApElcvLQKXKnGzgNe0Kps/edit?usp=sharing'>Link</a>
 
+# Project Slide
+Presentation Slides <br>
+<a href='https://docs.google.com/presentation/d/1BaBQEmscv0TV-UZpSadK8HJ6MPch8Q_D_OK926ncuWg/edit?usp=sharing'>Link</a>
 
 # Set up
 
