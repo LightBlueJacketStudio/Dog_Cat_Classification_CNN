@@ -24,8 +24,13 @@ def get_transforms(
             ),
             transforms.ToTensor(),
             transforms.Normalize(
-                mean=[0.485, 0.456, 0.406],
-                std=[0.229, 0.224, 0.225],
+                # imageNet
+                # mean=[0.485, 0.456, 0.406],
+                # std=[0.229, 0.224, 0.225],
+                #
+                # dataset
+                mean=[0.4866, 0.4538, 0.4146],
+                std=[0.2264, 0.2212, 0.2216],
             ),
         ])
     else:
@@ -33,8 +38,13 @@ def get_transforms(
             transforms.Resize(image_size),
             transforms.ToTensor(),
             transforms.Normalize(
-                mean=[0.485, 0.456, 0.406],
-                std=[0.229, 0.224, 0.225],
+                # imageNet
+                # mean=[0.485, 0.456, 0.406],
+                # std=[0.229, 0.224, 0.225],
+                #
+                # dataset
+                mean=[0.4866, 0.4538, 0.4146],
+                std=[0.2264, 0.2212, 0.2216],
             ),
         ])
 
